@@ -1,0 +1,3 @@
+class ListNovelistController:
+    @classmethod
+    def handle(cls): ...

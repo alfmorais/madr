@@ -1,0 +1,3 @@
+class CreateBookController:
+    @classmethod
+    def handle(cls): ...

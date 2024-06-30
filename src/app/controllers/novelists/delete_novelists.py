@@ -1,0 +1,3 @@
+class DeleteNovelistController:
+    @classmethod
+    def handle(cls, id: int): ...

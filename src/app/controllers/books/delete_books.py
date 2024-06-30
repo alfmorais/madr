@@ -1,0 +1,3 @@
+class DeleteBookController:
+    @classmethod
+    def handle(cls, id: int): ...

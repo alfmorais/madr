@@ -1,0 +1,3 @@
+class RetrieveNovelistController:
+    @classmethod
+    def handle(cls, id: int): ...

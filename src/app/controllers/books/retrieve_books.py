@@ -1,0 +1,3 @@
+class RetrieveBookController:
+    @classmethod
+    def handle(cls, id: int): ...

@@ -1,0 +1,3 @@
+class CreateAccountTokenControllers:
+    @classmethod
+    def handle(cls): ...
