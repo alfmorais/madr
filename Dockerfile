@@ -14,4 +14,3 @@ RUN poetry install --no-interaction --no-ansi
 RUN chmod 777 ./entrypoint.sh
 
 EXPOSE 8000
-# CMD poetry run uvicorn --host 0.0.0.0 src.app.application:app

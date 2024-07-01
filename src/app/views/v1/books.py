@@ -8,7 +8,7 @@ from src.app.controllers.books import (
     UpdateBookController,
 )
 
-router = APIRouter()
+router = APIRouter(tags=["Livros"])
 
 
 @router.post("/v1/livros")

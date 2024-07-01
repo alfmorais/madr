@@ -8,7 +8,7 @@ from src.app.controllers.novelists import (
     UpdateNovelistController,
 )
 
-router = APIRouter()
+router = APIRouter(tags=["Romancistas"])
 
 
 @router.post("/v1/romancistas")
