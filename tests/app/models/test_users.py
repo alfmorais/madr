@@ -23,25 +23,31 @@ def test_user_create_success(session):
 
 
 @pytest.mark.parametrize(
-    ("parameter_value", "parameter_name"),
-    [("abcde123", "user.username"), ("abcde12", "user.email")],
+    ("payload", "parameter_name"),
+    [
+        (
+            {
+                "username": "abcde123",
+                "password": "7i2$&xT@#1",
+                "email": "fghij46@gmail.com",
+            },
+            "username",
+        ),
+        (
+            {
+                "username": "abcde12",
+                "password": "7i2$&xT@#1",
+                "email": "fghij456@gmail.com",
+            },
+            "email",
+        ),
+    ],
 )
 def test_user_create_error_already_exists(
     session,
-    parameter_value,
+    payload,
     parameter_name,
 ):
-    error_database_message = "(sqlite3.IntegrityError)"
-    expected_response = "{0} UNIQUE constraint failed: {1}".format(
-        error_database_message,
-        parameter_name,
-    )
-    payload = {
-        "username": parameter_value,
-        "password": "7i2$&xT@#1",
-        "email": "fghij456@gmail.com",
-    }
-
     user = User(**payload)
     session.add(user)
 
@@ -51,5 +57,5 @@ def test_user_create_error_already_exists(
     session.rollback()
 
     assert database_error.typename == "IntegrityError"
-    assert database_error.value.args[0] == expected_response
+    assert parameter_name in database_error.value.args[0]
     assert issubclass(database_error.type, IntegrityError)

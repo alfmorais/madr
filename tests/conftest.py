@@ -3,8 +3,8 @@ from typing import Generator
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-from sqlalchemy.pool import StaticPool
+from sqlalchemy.orm import sessionmaker
+from testcontainers.postgres import PostgresContainer
 
 from src.app.application import app
 from src.config.database.base import Base
@@ -24,16 +24,24 @@ def client(session) -> Generator:
     app.dependency_overrides.clear()
 
 
+@pytest.fixture(scope="session")
+def engine():
+    with PostgresContainer("postgres:16", driver="psycopg") as postgres:
+        _engine = create_engine(postgres.get_connection_url())
+
+        with _engine.begin():
+            yield _engine
+
+
 @pytest.fixture(scope="module")
-def session():
-    engine = create_engine(
-        "sqlite:///:memory:",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
+def session(engine) -> Generator:
     Base.metadata.create_all(engine)
 
-    with Session(engine) as session:
-        yield session
+    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    session = SessionLocal()
 
-    Base.metadata.drop_all(engine)
+    try:
+        yield session
+    finally:
+        session.close()
+        Base.metadata.drop_all(engine)

@@ -2,10 +2,8 @@ from http import HTTPStatus
 
 import pytest
 from fastapi import HTTPException
-from sqlalchemy import select
 
 from src.app.controllers.accounts import CreateAccountControllers
-from src.app.models.users import User
 from src.app.schemas.requests.accounts import UserRequest
 
 
@@ -55,22 +53,6 @@ def test_create_account_already_exists(
     user_payload,
     session,
 ):
-    batman = UserRequest(**{
-        "username": "bruce-wayne",
-        "password": "iambatman",
-        "email": "bruce.wayne@wayneenterprises.com",
-    })
-    batman_database = session.scalar(
-        select(User).where(User.username == batman.username)
-    )
-    session.delete(batman_database)
-    session.commit()
-
-    CreateAccountControllers.handle(
-        user=batman,
-        session=session,
-    )
-
     with pytest.raises(HTTPException) as error:
         CreateAccountControllers.handle(
             user=UserRequest(**user_payload),
