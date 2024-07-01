@@ -13,6 +13,8 @@ pydantic = {extras = ["email"], version = "^2.7.4"}
 sqlalchemy = "^2.0.31"
 alembic = "^1.13.2"
 aiosqlite = "^0.20.0"
+psycopg = "^3.2.0"
+psycopg-binary = "^3.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -49,6 +51,8 @@ run = "fastapi dev src/app/application.py"
 pre_test = "task lint"
 test = "pytest -s -x --cov=src -vv"
 post_test = "coverage html"
+up = "docker compose build --no-cache && docker compose up"
+
 
 [build-system]
 requires = ["poetry-core"]

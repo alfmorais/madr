@@ -2,9 +2,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    PROJECT_TITLE: str = "Meu Acervo Digital de Romances"
-    PROJECT_VERSION: str = "0.0.1"
-    DATABASE_URL: str = "sqlite:///database.db"
+    DATABASE_URL: str
+    POSTGRES_DB: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_USER: str
+    PROJECT_TITLE: str
+    PROJECT_VERSION: str
 
     model_config = SettingsConfigDict(env_file=".env")
 
