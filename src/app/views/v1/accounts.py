@@ -81,4 +81,4 @@ def create_accounts_token(
     response_model=BearerToken,
 )
 def create_accounts_refresh_token(user: User = Depends(current_user)):
-    return CreateAccountTokenRefreshControllers.handle()
+    return CreateAccountTokenRefreshControllers.handle(user)
