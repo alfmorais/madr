@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker
 from testcontainers.postgres import PostgresContainer
 
 from src.app.application import app
+from src.app.controllers.utils import password_controller
+from src.app.models.users import User
 from src.config.database.base import Base
 from src.config.database.dependency import get_db
 
@@ -45,3 +47,29 @@ def session(engine) -> Generator:
     finally:
         session.close()
         Base.metadata.drop_all(engine)
+
+
+@pytest.fixture()
+def user(session):
+    password = "iambatman"
+    user = User(
+        username="Bruce Wayne",
+        email="bruce-wayne@wayne-enterprises.com",
+        password=password_controller.get_password_hash(password),
+    )
+    session.add(user)
+    session.commit()
+    session.refresh(user)
+
+    user.clean_password = "iambatman"
+
+    return user
+
+
+@pytest.fixture()
+def token(client, user):
+    response = client.post(
+        "/v1/token",
+        data={"username": user.email, "password": user.clean_password},
+    )
+    return response.json()["access_token"]

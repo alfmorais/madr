@@ -20,7 +20,7 @@ def test_create_account_success(session):
     )
 
     assert batman.username == batman_user_database.username
-    assert batman.password == batman_user_database.password
+    assert batman.password != batman_user_database.password
     assert batman.email == batman_user_database.email
 
 

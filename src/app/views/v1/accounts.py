@@ -11,6 +11,8 @@ from src.app.controllers.accounts import (
     CreateAccountTokenRefreshControllers,
     DeleteAccountControllers,
 )
+from src.app.controllers.utils import current_user
+from src.app.models.users import User
 from src.app.schemas.requests.accounts import UserRequest
 from src.app.schemas.responses.accounts import (
     BearerToken,
@@ -44,7 +46,7 @@ def change_accounts(
     user: UserRequest,
     session: Session = Depends(get_db),
 ):
-    return ChangeAccountControllers.handle()
+    return ChangeAccountControllers.handle(id, user, session)
 
 
 @router.delete(
@@ -68,7 +70,7 @@ def create_accounts_token(
     credentials: Annotated[OAuth2PasswordRequestForm, Depends()],
     session: Session = Depends(get_db),
 ):
-    return CreateAccountTokenControllers.handle()
+    return CreateAccountTokenControllers.handle(credentials, session)
 
 
 @router.post(
@@ -76,7 +78,5 @@ def create_accounts_token(
     status_code=status.HTTP_200_OK,
     response_model=BearerToken,
 )
-def create_accounts_refresh_token(
-    session: Session = Depends(get_db),
-):
+def create_accounts_refresh_token(user: User = Depends(current_user)):
     return CreateAccountTokenRefreshControllers.handle()

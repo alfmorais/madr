@@ -44,5 +44,5 @@ def test_chage_accounts_controllers_success(session):
 
     assert updated_user.id == joker_id
     assert updated_user.username == batman.username
-    assert updated_user.password == batman.password
+    assert updated_user.password != batman.password
     assert updated_user.email == batman.email

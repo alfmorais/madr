@@ -4,6 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from src.app.controllers.utils import password_controller
 from src.app.models.users import User
 from src.app.schemas.requests.accounts import UserRequest
 
@@ -29,7 +30,12 @@ class CreateAccountControllers:
                     detail=f"Usuário com o email {user.email} já existe",
                 )
 
-        new_user = User(**user.model_dump())
+        hashed_password = password_controller.get_password_hash(user.password)
+        new_user = User(
+            email=user.email,
+            username=user.username,
+            password=hashed_password,
+        )
         session.add(new_user)
         session.commit()
         session.refresh(new_user)
