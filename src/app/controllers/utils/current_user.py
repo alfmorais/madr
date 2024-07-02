@@ -12,7 +12,7 @@ from src.config.database.dependency import get_db
 
 SECRET_KEY = "your-secret-key"
 ALGORITHM = "HS256"
-OAUTH2 = OAuth2PasswordBearer(tokenUrl="token")
+OAUTH2 = OAuth2PasswordBearer(tokenUrl="/v1/token")
 
 
 def credentials_exception():

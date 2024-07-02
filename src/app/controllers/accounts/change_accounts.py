@@ -17,17 +17,16 @@ class ChangeAccountControllers:
         id: int,
         user: UserRequest,
         session: Session,
+        current_user: User,
     ) -> UserResponse:
-        user_query = session.scalar(select(User).where(User.id == id))
-
-        if not user_query:
+        if current_user.id != id:
             raise HTTPException(
-                status_code=HTTPStatus.NOT_FOUND,
-                detail=f"Usuário com ID: {id} não encontrado",
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="Usuário não possui autorização para esse recurso",
             )
 
+        user_query = session.scalar(select(User).where(User.id == id))
         password = password_controller.get_password_hash(user.password)
-
         user_query.username = user.username
         user_query.email = user.email
         user_query.password = password

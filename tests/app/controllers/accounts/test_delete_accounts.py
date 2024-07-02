@@ -25,16 +25,24 @@ def test_delete_accounts_success(session):
     response = DeleteAccountControllers.handle(
         id=batman_instance.id,
         session=session,
+        current_user=batman_instance,
     )
 
     assert response == {"message": "Conta deletada com sucesso"}
 
 
-def test_delete_accounts_not_found_user_error(session):
+def test_delete_accounts_not_found_user_error(session, user):
     with pytest.raises(HTTPException) as error:
-        DeleteAccountControllers.handle(id=1984, session=session)
+        DeleteAccountControllers.handle(
+            id=1984,
+            session=session,
+            current_user=user,
+        )
 
     assert error.typename == "HTTPException"
-    assert error.value.detail == "Usuário com ID: 1984 não encontrado"
-    assert error.value.status_code == HTTPStatus.NOT_FOUND
+    assert (
+        error.value.detail
+        == "Usuário não possui autorização para esse recurso"
+    )  # noqa E501
+    assert error.value.status_code == HTTPStatus.UNAUTHORIZED
     assert issubclass(error.type, HTTPException)

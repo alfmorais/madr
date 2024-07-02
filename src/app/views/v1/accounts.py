@@ -45,8 +45,9 @@ def change_accounts(
     id: int,
     user: UserRequest,
     session: Session = Depends(get_db),
+    current_user: User = Depends(current_user),
 ):
-    return ChangeAccountControllers.handle(id, user, session)
+    return ChangeAccountControllers.handle(id, user, session, current_user)
 
 
 @router.delete(
@@ -57,8 +58,9 @@ def change_accounts(
 def delete_accounts(
     id: int,
     session: Session = Depends(get_db),
+    current_user: User = Depends(current_user),
 ):
-    return DeleteAccountControllers.handle(id, session)
+    return DeleteAccountControllers.handle(id, session, current_user)
 
 
 @router.post(

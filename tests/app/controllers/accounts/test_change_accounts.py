@@ -10,13 +10,21 @@ from src.app.controllers.accounts import (
 from src.app.schemas.requests.accounts import UserRequest
 
 
-def test_change_accounts_controllers_http_exception(session):
+def test_change_accounts_controllers_http_exception(session, user):
     with pytest.raises(HTTPException) as error:
-        ChangeAccountControllers.handle(id=99, user={}, session=session)
+        ChangeAccountControllers.handle(
+            id=99,
+            user={},
+            session=session,
+            current_user=user,
+        )
 
     assert error.typename == "HTTPException"
-    assert error.value.detail == "Usuário com ID: 99 não encontrado"
-    assert error.value.status_code == HTTPStatus.NOT_FOUND
+    assert (
+        error.value.detail
+        == "Usuário não possui autorização para esse recurso"
+    )
+    assert error.value.status_code == HTTPStatus.UNAUTHORIZED
     assert issubclass(error.type, HTTPException)
 
 
@@ -40,6 +48,7 @@ def test_chage_accounts_controllers_success(session):
         id=joker_id,
         user=batman,
         session=session,
+        current_user=joker,
     )
 
     assert updated_user.id == joker_id

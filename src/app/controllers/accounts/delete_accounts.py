@@ -10,15 +10,19 @@ from src.app.schemas.responses.accounts import UserDeleted
 
 class DeleteAccountControllers:
     @classmethod
-    def handle(cls, id: int, session: Session) -> UserDeleted:
-        user_query = session.scalar(select(User).where(User.id == id))
-
-        if not user_query:
+    def handle(
+        cls,
+        id: int,
+        session: Session,
+        current_user: User,
+    ) -> UserDeleted:
+        if current_user.id != id:
             raise HTTPException(
-                status_code=HTTPStatus.NOT_FOUND,
-                detail=f"Usuário com ID: {id} não encontrado",
+                status_code=HTTPStatus.UNAUTHORIZED,
+                detail="Usuário não possui autorização para esse recurso",
             )
 
+        user_query = session.scalar(select(User).where(User.id == id))
         session.delete(user_query)
         session.commit()
 
