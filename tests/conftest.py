@@ -8,6 +8,7 @@ from testcontainers.postgres import PostgresContainer
 
 from src.app.application import app
 from src.app.controllers.utils import password_controller
+from src.app.models.novelists import Novelist
 from src.app.models.users import User
 from src.config.database.base import Base
 from src.config.database.dependency import get_db
@@ -73,3 +74,12 @@ def token(client, user):
         data={"username": user.email, "password": user.clean_password},
     )
     return response.json()["access_token"]
+
+
+@pytest.fixture()
+def novelist(session):
+    novelist = Novelist(name="Isaac Asimov")
+    session.add(novelist)
+    session.commit()
+    session.refresh(novelist)
+    return novelist

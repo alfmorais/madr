@@ -5,6 +5,7 @@ from sqlalchemy import pool
 
 from alembic import context
 from src.app.models.users import User  # noqa
+from src.app.models.novelists import Novelist  # noqa
 from src.config.app.application import settings
 from src.config.database.base import Base
 
