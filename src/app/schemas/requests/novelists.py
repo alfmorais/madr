@@ -7,7 +7,7 @@ class NovelistRequest(BaseModel):
     @field_validator("name")
     @classmethod
     def format_name(cls, name: str) -> str:
-        return name.strip().lower()
+        return " ".join(name.strip().split()).lower()
 
 
 class NovelistListQueryParams(BaseModel):

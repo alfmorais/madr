@@ -8,6 +8,7 @@ from testcontainers.postgres import PostgresContainer
 
 from src.app.application import app
 from src.app.controllers.utils import password_controller
+from src.app.models.books import Book
 from src.app.models.novelists import Novelist
 from src.app.models.users import User
 from src.config.database.base import Base
@@ -61,9 +62,7 @@ def user(session):
     session.add(user)
     session.commit()
     session.refresh(user)
-
     user.clean_password = "iambatman"
-
     return user
 
 
@@ -83,3 +82,11 @@ def novelist(session):
     session.commit()
     session.refresh(novelist)
     return novelist
+
+
+@pytest.fixture()
+def book(session, novelist):
+    book = Book(title="Sample Book", year=2023, novelist_id=novelist.id)
+    session.add(book)
+    session.commit()
+    return book

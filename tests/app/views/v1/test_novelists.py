@@ -8,7 +8,7 @@ def test_create_novelist(client, token, session, user):
         json={"name": "Arthur C. Clarke"},
     )
 
-    assert response.status_code == HTTPStatus.OK
+    assert response.status_code == HTTPStatus.CREATED
     assert response.json()["name"] == "arthur c. clarke"
 
     session.delete(user)

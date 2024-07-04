@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
@@ -24,7 +26,11 @@ from src.config.database.dependency import get_db
 router = APIRouter(tags=["Romancistas"])
 
 
-@router.post("/v1/romancistas", response_model=NovelistResponse)
+@router.post(
+    "/v1/romancistas",
+    status_code=HTTPStatus.CREATED,
+    response_model=NovelistResponse,
+)
 def create_novelists(
     novelist: NovelistRequest,
     session: Session = Depends(get_db),
@@ -33,7 +39,11 @@ def create_novelists(
     return CreateNovelistController.handle(novelist, session)
 
 
-@router.delete("/v1/romancistas/{id}", response_model=NovelistDeleted)
+@router.delete(
+    "/v1/romancistas/{id}",
+    status_code=HTTPStatus.OK,
+    response_model=NovelistDeleted,
+)
 def delete_novelists(
     id: int,
     session: Session = Depends(get_db),
@@ -42,7 +52,11 @@ def delete_novelists(
     return DeleteNovelistController.handle(id, session)
 
 
-@router.patch("/v1/romancistas/{id}", response_model=NovelistResponse)
+@router.patch(
+    "/v1/romancistas/{id}",
+    status_code=HTTPStatus.OK,
+    response_model=NovelistResponse,
+)
 def update_novelists(
     id: int,
     novelist: NovelistRequest,
@@ -52,7 +66,11 @@ def update_novelists(
     return UpdateNovelistController.handle(id, novelist, session)
 
 
-@router.get("/v1/romancistas/{id}", response_model=NovelistResponse)
+@router.get(
+    "/v1/romancistas/{id}",
+    status_code=HTTPStatus.OK,
+    response_model=NovelistResponse,
+)
 def retrieve_novelists(
     id: int,
     session: Session = Depends(get_db),
@@ -61,7 +79,11 @@ def retrieve_novelists(
     return RetrieveNovelistController.handle(id, session)
 
 
-@router.get("/v1/romancistas", response_model=NovelistsResponse)
+@router.get(
+    "/v1/romancistas",
+    status_code=HTTPStatus.OK,
+    response_model=NovelistsResponse,
+)
 def list_novelists(
     session: Session = Depends(get_db),
     current_user: User = Depends(current_user),
