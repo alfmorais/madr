@@ -55,6 +55,8 @@ run = "fastapi dev src/app/application.py"
 pre_test = "task lint"
 test = "pytest -s -x --cov=src -vv"
 post_test = "coverage html"
+build = "docker compose build --no-cache"
+run = "docker compose up"
 up = "docker compose build --no-cache && docker compose up"
 
 
